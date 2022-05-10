@@ -9,11 +9,6 @@ app = Flask(__name__)    # Construct an instance of Flask class for our webapp
 @app.route('/')   # URL '/' to be handled by main() route handler
 @app.route('/jobs')
 
-
-def main():
-  """Say hello"""
-  return render_template('index.html')
-
 def jobs():
   return render_template('index.html')
 
