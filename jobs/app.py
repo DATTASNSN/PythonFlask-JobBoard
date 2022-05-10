@@ -11,8 +11,12 @@ app = Flask(__name__)    # Construct an instance of Flask class for our webapp
 
 
 def main():
-    """Say hello"""
-    return render_template('index.html')
+  """Say hello"""
+  return render_template('index.html')
+
+def jobs():
+  return render_template('index.html')
+
 
 if __name__ == '__main__':  # Script executed directly?
-    app.run(debug=True) #  # Launch built-in web server and run this Flask webapp
+  app.run(debug=True) #  # Launch built-in web server and run this Flask webapp
