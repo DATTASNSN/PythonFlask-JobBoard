@@ -1,17 +1,34 @@
-# -*- coding: UTF-8 -*-
-"""
-hello_flask: First Python-Flask webapp
-"""
-from flask import Flask  # From module flask import class Flask
-from flask import render_template
-app = Flask(__name__)    # Construct an instance of Flask class for our webapp
+import sqlite3
+from flask import Flask, render_template, g
 
-@app.route('/')   # URL '/' to be handled by main() route handler
+PATH = 'db/jobs.sqlite'
+
+app = Flask(__name__)
+
+def open_connection():
+    connection = getattr(g, '_connection', None)
+    if connection == None:
+        connection = g._connection = sqlite3.connect(PATH)
+    connection.row_factory = sqlite3.Row
+    return connection
+
+def execute_sql(sql, values=(), commit=False, single=False):
+    connection = open_connection()
+    cursor = connection.execute(sql, values)
+    if commit == True:
+        results = connection.commit()
+    else:
+        results = cursor.fetchone() if single else cursor.fetchall()
+
+    cursor.close()
+    return results
+
+@app.teardown_appcontext
+def close_connection(exception):
+    connection = getattr(g, '_connection', None)
+    if connection is not None:
+        connection.close()
+
+@app.route('/')
 @app.route('/jobs')
-
 def jobs():
-  return render_template('index.html')
-
-
-if __name__ == '__main__':  # Script executed directly?
-  app.run(debug=True) #  # Launch built-in web server and run this Flask webapp
